@@ -1,57 +1,40 @@
-const e = require('express');
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const dburl = "mongodb+srv://siddharth:FOrYp6GZmOTZWgh9@cluster0.bpjvihj.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0";
+const productRoutes = require("./routes/productRoutes");
 
-const products = [
-  {id: 1, name: "Apple"},
-  {id: 2, name: "Orange"},
-  {id: 3, name: "Mango"},
-]
+app.use(express.json());
 
-const users = [
-  {id: 1, name: "Rahul"},
-  {id: 2, name: "Sid"},
-  {id: 3, name: "Ankush"},
-]
+//middleware
+// to take the req that is coming 
+// and to manipulate that req into something else
+
+
+// const products = [
+//   {id: 1, name: "Apple"},
+//   {id: 2, name: "Orange"},
+//   {id: 3, name: "Mango"},
+// ]
+
+// const users = [
+//   {id: 1, name: "Rahul"},
+//   {id: 2, name: "Sid"},
+//   {id: 3, name: "Ankush"},
+// ]
 
 // schema - structure of collection in the MONGODB it says you can connect with the database
 // and you fetch and store the data in the format presented in the schema
 // model - pass the scheme to me and get a object which could be used to get the data 
 // add the data in a collection 
 
-const productSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  price: {
-    type: String,
-    required: true,
-  },
-
-  brand: {
-    type: String,
-    required: true,
-  },
-
-  category: {
-    type: String,
-    required: true,
-  },
-}, { timestamps: true });
-
-const productModel = mongoose.model('products', productSchema);
-
 mongoose.connect(dburl).then((function () {
   console.log("connected to db");
 })).catch(err => console.log(err));
 
-app.get('/api/products', async (req, res) => {
-  let products = await productModel.find();
-  res.json(products);
-})
+
+app.use("/api/products", productRoutes);
+
 
 // app.get('/api/users', (req, res) => {
 //   res.json(users);
